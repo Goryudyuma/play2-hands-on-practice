@@ -14,7 +14,8 @@ libraryDependencies ++= Seq(
   "com.h2database" % "h2" % "1.4.197",
   "org.scalikejdbc" %% "scalikejdbc" % "3.2.3",
   "org.scalikejdbc" %% "scalikejdbc-config" % "3.2.3",
-  "org.scalikejdbc" %% "scalikejdbc-play-initializer" % "2.6.0-scalikejdbc-3.2"
+  "org.scalikejdbc" %% "scalikejdbc-play-initializer" % "2.6.0-scalikejdbc-3.2",
+  "javax.xml.bind" % "jaxb-api" % "2.3.0"
 )
 
 // Adds additional packages into Twirl
