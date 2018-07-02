@@ -15,7 +15,8 @@ libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc" % "3.2.3",
   "org.scalikejdbc" %% "scalikejdbc-config" % "3.2.3",
   "org.scalikejdbc" %% "scalikejdbc-play-initializer" % "2.6.0-scalikejdbc-3.2",
-  "javax.xml.bind" % "jaxb-api" % "2.3.0"
+  "javax.xml.bind" % "jaxb-api" % "2.3.0",
+  "org.scalikejdbc" %% "scalikejdbc-test" % "3.2.3" % Test
 )
 
 // Adds additional packages into Twirl
@@ -25,3 +26,5 @@ libraryDependencies ++= Seq(
 // play.sbt.routes.RoutesKeys.routesImport += "com.example.binders._"
 
 enablePlugins(ScalikejdbcPlugin)
+
+javaOptions in Test += "-Dconfig.file=conf/test.conf"
