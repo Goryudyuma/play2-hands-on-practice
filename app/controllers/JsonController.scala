@@ -1,5 +1,6 @@
 package controllers
 
+import controllers.UserController.UserForm
 import play.api.mvc._
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
@@ -31,12 +32,36 @@ class JsonController @Inject()(components: ControllerComponents)
   /**
     * ユーザ登録
     */
-  def create = TODO
+  def create = Action(parse.json) { implicit request =>
+    request.body.validate[UserForm].map { form =>
+      // OKの場合はユーザを登録
+      DB.localTx { implicit session =>
+        Users.create(form.name, form.companyId)
+        Ok(Json.obj("result" -> "success"))
+      }
+    }.recoverTotal { e =>
+      // NGの場合はバリデーションエラーを返す
+      BadRequest(Json.obj("result" -> "failure", "error" -> JsError.toJson(e)))
+    }
+  }
 
   /**
     * ユーザ更新
     */
-  def update = TODO
+  def update = Action(parse.json) { implicit request =>
+    request.body.validate[UserForm].map { form =>
+      // OKの場合はユーザ情報を更新
+      DB.localTx { implicit session =>
+        Users.find(form.id.get).foreach { user =>
+          Users.save(user.copy(name = form.name, companyId = form.companyId))
+        }
+        Ok(Json.obj("result" -> "success"))
+      }
+    }.recoverTotal { e =>
+      // NGの場合はバリデーションエラーを返す
+      BadRequest(Json.obj("result" -> "failure", "error" -> JsError.toJson(e)))
+    }
+  }
 
   /**
     * ユーザ削除

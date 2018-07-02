@@ -6,8 +6,8 @@ import play.api.data.Forms._
 import javax.inject.Inject
 import scalikejdbc._
 import models._
-
 import UserController._
+import play.api.libs.json.Json
 
 class UserController @Inject()(components: MessagesControllerComponents)
   extends MessagesAbstractController(components) {
@@ -134,4 +134,6 @@ object UserController {
       "companyId" -> optional(number)
     )(UserForm.apply)(UserForm.unapply)
   )
+
+  implicit val userFormFormat = Json.format[UserForm]
 }
