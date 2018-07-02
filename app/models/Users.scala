@@ -114,14 +114,4 @@ object Users extends SQLSyntaxSupport[Users] {
       delete.from(Users).where.eq(column.id, entity.id)
     }.update.apply()
   }
-
-  implicit val usersWritesFormat = new Writes[Users] {
-    def writes(user: Users): JsValue = {
-      Json.obj(
-        "id" -> user.id,
-        "name" -> user.name,
-        "companyId" -> user.companyId
-      )
-    }
-  }
 }

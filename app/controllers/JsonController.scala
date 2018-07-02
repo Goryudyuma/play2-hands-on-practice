@@ -7,6 +7,7 @@ import play.api.libs.functional.syntax._
 import javax.inject.Inject
 import scalikejdbc._
 import models._
+import JsonController._
 
 class JsonController @Inject()(components: ControllerComponents)
   extends AbstractController(components) {
@@ -75,4 +76,23 @@ class JsonController @Inject()(components: ControllerComponents)
       Ok(Json.obj("result" -> "success"))
     }
   }
+}
+
+object JsonController {
+  // UsersをJSONに変換するためのWritesを定義
+  implicit val usersWrites: Writes[Users] = (
+    (__ \ "id").write[Long] and
+      (__ \ "name").write[String] and
+      (__ \ "companyId").writeNullable[Int]
+    ) (unlift(Users.unapply))
+
+  // ユーザ情報を受け取るためのケースクラス
+  case class UserForm(id: Option[Long], name: String, companyId: Option[Int])
+
+  // JSONをUserFormに変換するためのReadsを定義
+  implicit val userFormReads = (
+    (__ \ "id").readNullable[Long] and
+      (__ \ "name").read[String] and
+      (__ \ "companyId").readNullable[Int]
+    ) (UserForm)
 }
