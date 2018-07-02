@@ -1,5 +1,6 @@
 package models
 
+import play.api.libs.json.{JsValue, Json, Writes}
 import scalikejdbc._
 
 case class Users(
@@ -114,4 +115,13 @@ object Users extends SQLSyntaxSupport[Users] {
     }.update.apply()
   }
 
+  implicit val usersWritesFormat = new Writes[Users] {
+    def writes(user: Users): JsValue = {
+      Json.obj(
+        "id" -> user.id,
+        "name" -> user.name,
+        "companyId" -> user.companyId
+      )
+    }
+  }
 }

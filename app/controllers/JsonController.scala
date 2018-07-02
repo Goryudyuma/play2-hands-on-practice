@@ -13,7 +13,20 @@ class JsonController @Inject()(components: ControllerComponents)
   /**
     * 一覧表示
     */
-  def list = TODO
+  def list = Action { implicit request =>
+    val u = Users.syntax("u")
+
+    DB.readOnly { implicit session =>
+      // ユーザのリストを取得
+      val users = withSQL {
+        select.from(Users as u).orderBy(u.id.asc)
+      }.map(Users(u.resultName)).list.apply()
+
+      // ユーザの一覧をJSONで返す
+      Ok(Json.obj("users" -> users))
+    }
+  }
+
 
   /**
     * ユーザ登録
