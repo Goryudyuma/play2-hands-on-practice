@@ -3,8 +3,8 @@ package models
 import scalikejdbc._
 
 case class Companies(
-  id: Int,
-  name: String) {
+                      id: Int,
+                      name: String) {
 
   def save()(implicit session: DBSession = Companies.autoSession): Companies = Companies.save(this)(session)
 
@@ -22,6 +22,7 @@ object Companies extends SQLSyntaxSupport[Companies] {
   override val columns = Seq("ID", "NAME")
 
   def apply(c: SyntaxProvider[Companies])(rs: WrappedResultSet): Companies = apply(c.resultName)(rs)
+
   def apply(c: ResultName[Companies])(rs: WrappedResultSet): Companies = new Companies(
     id = rs.get(c.id),
     name = rs.get(c.name)
@@ -64,8 +65,8 @@ object Companies extends SQLSyntaxSupport[Companies] {
   }
 
   def create(
-    id: Int,
-    name: String)(implicit session: DBSession = autoSession): Companies = {
+              id: Int,
+              name: String)(implicit session: DBSession = autoSession): Companies = {
     withSQL {
       insert.into(Companies).namedValues(
         column.id -> id,
@@ -83,7 +84,8 @@ object Companies extends SQLSyntaxSupport[Companies] {
       Seq(
         'id -> entity.id,
         'name -> entity.name))
-    SQL("""insert into COMPANIES(
+    SQL(
+      """insert into COMPANIES(
       ID,
       NAME
     ) values (
@@ -103,7 +105,9 @@ object Companies extends SQLSyntaxSupport[Companies] {
   }
 
   def destroy(entity: Companies)(implicit session: DBSession = autoSession): Int = {
-    withSQL { delete.from(Companies).where.eq(column.id, entity.id) }.update.apply()
+    withSQL {
+      delete.from(Companies).where.eq(column.id, entity.id)
+    }.update.apply()
   }
 
 }

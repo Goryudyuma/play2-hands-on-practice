@@ -3,9 +3,9 @@ package models
 import scalikejdbc._
 
 case class Users(
-  id: Long,
-  name: String,
-  companyId: Option[Int] = None) {
+                  id: Long,
+                  name: String,
+                  companyId: Option[Int] = None) {
 
   def save()(implicit session: DBSession = Users.autoSession): Users = Users.save(this)(session)
 
@@ -23,6 +23,7 @@ object Users extends SQLSyntaxSupport[Users] {
   override val columns = Seq("ID", "NAME", "COMPANY_ID")
 
   def apply(u: SyntaxProvider[Users])(rs: WrappedResultSet): Users = apply(u.resultName)(rs)
+
   def apply(u: ResultName[Users])(rs: WrappedResultSet): Users = new Users(
     id = rs.get(u.id),
     name = rs.get(u.name),
@@ -66,8 +67,8 @@ object Users extends SQLSyntaxSupport[Users] {
   }
 
   def create(
-    name: String,
-    companyId: Option[Int] = None)(implicit session: DBSession = autoSession): Users = {
+              name: String,
+              companyId: Option[Int] = None)(implicit session: DBSession = autoSession): Users = {
     val generatedKey = withSQL {
       insert.into(Users).namedValues(
         column.name -> name,
@@ -86,7 +87,8 @@ object Users extends SQLSyntaxSupport[Users] {
       Seq(
         'name -> entity.name,
         'companyId -> entity.companyId))
-    SQL("""insert into USERS(
+    SQL(
+      """insert into USERS(
       NAME,
       COMPANY_ID
     ) values (
@@ -107,7 +109,9 @@ object Users extends SQLSyntaxSupport[Users] {
   }
 
   def destroy(entity: Users)(implicit session: DBSession = autoSession): Int = {
-    withSQL { delete.from(Users).where.eq(column.id, entity.id) }.update.apply()
+    withSQL {
+      delete.from(Users).where.eq(column.id, entity.id)
+    }.update.apply()
   }
 
 }
